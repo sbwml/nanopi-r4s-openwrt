@@ -1,4 +1,4 @@
-name: OpenWrt-21.02-R4S
+name: OpenWrt-22.03-rc-R4S
 
 on:
   watch:
@@ -54,7 +54,7 @@ jobs:
     - name: Compile Openwrt
       id: compileopenwrt
       run: |
-        bash <(curl -sS ${{ secrets.script_url }}) stable
+        bash <(curl -sS ${{ secrets.script_url }}) rc
         cd openwrt
         tags=$(git describe --abbrev=0 --tags)
         echo "latest_release=$tags" >>$GITHUB_ENV
@@ -77,6 +77,7 @@ jobs:
         allowUpdates: true
         tag: ${{ env.latest_release }}
         commit: master
+        prerelease: true
         replacesArtifacts: true
         token: ${{ secrets.workflow_token }}
         artifacts: rom/*
