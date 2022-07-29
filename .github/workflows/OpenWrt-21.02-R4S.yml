@@ -65,7 +65,7 @@ jobs:
         mkdir -p rom
         cp -a openwrt/bin/targets/rockchip/armv8/*.img.gz rom/
         cp -a openwrt/bin/targets/rockchip/armv8/*-r4s.manifest rom/manifest.txt
-        cp -a openwrt/bin/targets/rockchip/armv8/config.buildinfo rom/config.txt
+        cp -a openwrt/bin/targets/rockchip/armv8/config.buildinfo rom/
         #cp -a openwrt/version.txt rom/
         cd rom && sha256sum *gz > sha256sums.txt
 
@@ -96,11 +96,11 @@ jobs:
       continue-on-error: true
       run: |
         # Upload to hash dir
-        aliyundrive upload --retry 10 -f rom/manifest.txt openwrt/hash/
-        aliyundrive upload --retry 10 -f rom/config.buildinfo openwrt/hash/
-        aliyundrive upload --retry 10 -f rom/sha256sums.txt openwrt/hash/
-        aliyundrive upload --retry 10 -f rom/*-r4s-ext4-sysupgrade.img.gz openwrt/hash/
-        aliyundrive upload --retry 10 -f rom/*-r4s-squashfs-sysupgrade.img.gz openwrt/hash/
+        aliyundrive upload --retry 10 -f rom/manifest.txt openwrt/hash/ || true
+        aliyundrive upload --retry 10 -f rom/config.buildinfo openwrt/hash/ || true
+        aliyundrive upload --retry 10 -f rom/sha256sums.txt openwrt/hash/ || true
+        aliyundrive upload --retry 10 -f rom/*-r4s-ext4-sysupgrade.img.gz openwrt/hash/ || true
+        aliyundrive upload --retry 10 -f rom/*-r4s-squashfs-sysupgrade.img.gz openwrt/hash/ || true
 
     - name: Upload Firmware - releases
       id: upload-firmware
@@ -109,8 +109,8 @@ jobs:
         # Upload to candidate dir
         version=$(cat openwrt/version.txt)
         aliyundrive mkdir openwrt/releases/$version
-        aliyundrive upload -f rom/manifest.txt openwrt/releases/$version/
-        aliyundrive upload -f rom/config.buildinfo openwrt/releases/$version/
-        aliyundrive upload -f rom/sha256sums.txt openwrt/releases/$version/
-        aliyundrive upload -f rom/*-r4s-ext4-sysupgrade.img.gz openwrt/releases/$version/
+        aliyundrive upload -f rom/manifest.txt openwrt/releases/$version/ || true
+        aliyundrive upload -f rom/config.buildinfo openwrt/releases/$version/ || true
+        aliyundrive upload -f rom/sha256sums.txt openwrt/releases/$version/ || true
+        aliyundrive upload -f rom/*-r4s-ext4-sysupgrade.img.gz openwrt/releases/$version/ || true
         aliyundrive upload -f rom/*-r4s-squashfs-sysupgrade.img.gz openwrt/releases/$version/
